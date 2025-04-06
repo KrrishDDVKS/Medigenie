@@ -5,7 +5,4 @@ langchain-pinecone
 langchain-openai
 langchain-core
 langchain
-pandas
-pydub
-git+https://github.com/openai/whisper.git
 numpy
