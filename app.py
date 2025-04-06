@@ -1,12 +1,10 @@
 import streamlit as st
 from PIL import Image
-import random
 from streamlit_lottie import st_lottie
 import json
-import base64
 import os
 import re
-from dotenv import load_dotenv,dotenv_values
+from dotenv import dotenv_values
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
 from langchain_core.vectorstores import VectorStoreRetriever
@@ -20,10 +18,8 @@ from pymongo import MongoClient
 import torch
 import clip
 from pinecone import Pinecone
-import openai
 from pymongo import MongoClient
-import whisper
-import tempfile
+
 # --- Page Config ---
 st.set_page_config(
     page_title="MediConnect AI",
@@ -272,7 +268,7 @@ with st.sidebar:
     unsafe_allow_html=True)
     bubble_html = """
     <div class="container">
-        <div class="emoji">🕵️‍♂️</div>
+        <div class="emoji">🕵‍♂</div>
         <div class="bubble">
             Got a mystery on your skin? Upload the clues. I'll investigate. 🔍
         </div>
@@ -280,7 +276,7 @@ with st.sidebar:
     """
     st.markdown(bubble_html, unsafe_allow_html=True)
     st.markdown("<div class='centered'>", unsafe_allow_html=True)
-    st.markdown("### 🖼️ Upload or Capture Evidence", unsafe_allow_html=True)
+    st.markdown("### 🖼 Upload or Capture Evidence", unsafe_allow_html=True)
     option = st.radio("Choose method:", ["Upload Image", "Open Camera"])
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -353,7 +349,7 @@ with st.sidebar:
 
 flag = st.toggle("Audio")
 if not flag:
-    prompt_template='''If Medical Symptoms type yes else give politely inform the user that the data is insufficient to provide a diagnosis   
+    prompt_template='''If Medical Symptoms type yes else give politely inform the user that the data is insufficient to provide a diagnosis   
     Text:
     {context}'''
     PROMPT = PromptTemplate(
@@ -361,13 +357,13 @@ if not flag:
     )
 
     if prompt := st.chat_input():
-        st.markdown('<div class="typing">🕵️‍♂️ Skin Scout is investigating your case...</div>', unsafe_allow_html=True)
+        st.markdown('<div class="typing">🕵‍♂ Skin Scout is investigating your case...</div>', unsafe_allow_html=True)
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.chat_message("user").write(prompt)
         chain = LLMChain(llm=llm, prompt=PROMPT)
         answer=chain.run(prompt)
         if re.search(r'\bYes\b', answer):
-            prompt_template='''Accept the user’s symptoms as input and provide probable diseases, diagnoses and prescription using only the information stored in the vector database. politely inform the user that the data is insufficient to provide a diagnosis when the given prompt is not relavent to Medical Symptoms.    
+            prompt_template='''Accept the user’s symptoms as input and provide probable diseases, diagnoses and prescription using only the information stored in the vector database. politely inform the user that the data is insufficient to provide a diagnosis when the given prompt is not relavent to Medical Symptoms.    
             Text:
             {context}'''
             PROMPT = PromptTemplate(
@@ -449,7 +445,7 @@ else:
     prompt=[i['text'] for i in au][0]
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
-    prompt_template='''If Medical Symptoms type yes else give politely inform the user that the data is insufficient to provide a diagnosis   
+    prompt_template='''If Medical Symptoms type yes else give politely inform the user that the data is insufficient to provide a diagnosis   
     Text:
     {context}'''
     PROMPT = PromptTemplate(
@@ -458,7 +454,7 @@ else:
     chain = LLMChain(llm=llm, prompt=PROMPT)
     answer=chain.run(prompt)
     if re.search(r'\bYes\b', answer):
-        prompt_template='''Accept the user’s symptoms as input and provide probable diseases, diagnoses and prescription using only the information stored in the vector database. politely inform the user that the data is insufficient to provide a diagnosis when the given prompt is not relavent to Medical Symptoms.    
+        prompt_template='''Accept the user’s symptoms as input and provide probable diseases, diagnoses and prescription using only the information stored in the vector database. politely inform the user that the data is insufficient to provide a diagnosis when the given prompt is not relavent to Medical Symptoms.    
         Text:
         {context}'''
         PROMPT = PromptTemplate(
@@ -485,5 +481,3 @@ if uploaded:
         st.chat_message("assistant").write(answer)
 if st.button('clear'):
     h.update_one({"id": 'krrish'},{"$set": {"text": ""}})
-
-
