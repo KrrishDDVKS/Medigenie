@@ -18,7 +18,7 @@ import io
 import speech_recognition as sr
 import torch
 import clip
-from pinecone import Pinecone
+#from pinecone import Pinecone
 import openai
 import whisper
 import tempfile
@@ -397,6 +397,7 @@ if uploaded:
         st.chat_message("assistant").write(answer)
 if st.button('clear'):
     h.update_one({"id": 'krrish'},{"$set": {"text": ""}})
+
 
 
 
