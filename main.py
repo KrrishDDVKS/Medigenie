@@ -7,7 +7,7 @@ import base64
 import os
 import re
 from dotenv import load_dotenv,dotenv_values
-from langchain_pinecone import PineconeVectorStore
+from langchain_community.vectorstores import Pinecone as PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
 from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_community.chains import RetrievalQA
@@ -397,6 +397,7 @@ if uploaded:
         st.chat_message("assistant").write(answer)
 if st.button('clear'):
     h.update_one({"id": 'krrish'},{"$set": {"text": ""}})
+
 
 
 
