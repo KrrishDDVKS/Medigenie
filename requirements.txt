@@ -4,7 +4,8 @@ python-dotenv
 langchain-pinecone
 langchain-openai
 langchain-core
-langchain==0.1
+langchain
+langchain-community
 pandas
 pydub
 git+https://github.com/openai/CLIP.git
@@ -13,5 +14,6 @@ torch
 clip
 SpeechRecognition
 pip==25.0
+
 
 
