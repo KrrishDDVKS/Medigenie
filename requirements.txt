@@ -1,7 +1,7 @@
 streamlit==1.44.1
 streamlit-lottie==0.0.5
 python-dotenv
-langchain-pinecone
+pinecone
 langchain-openai
 langchain-core
 langchain
@@ -14,6 +14,7 @@ torch
 clip
 SpeechRecognition
 pip==25.0
+
 
 
 
