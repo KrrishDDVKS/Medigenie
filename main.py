@@ -10,8 +10,7 @@ from dotenv import load_dotenv,dotenv_values
 from langchain_community.vectorstores import Pinecone as PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
 from langchain_core.vectorstores import VectorStoreRetriever
-from langchain_community.chains import RetrievalQA
-from langchain.chains import LLMChain
+from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 import io
@@ -302,13 +301,10 @@ with st.sidebar:
                 result= index.query(vector=rv.tolist(), top_k=1, include_metadata=True)
                 prompt=result['matches'][0]['metadata']['Disease']
                 st.write(prompt)
-                prompt_template='''Accept the user’s skin condition as input and provide probable diagnoses and prescription for only that condition.    
-                Text:
-                {context}'''
-                PROMPT = PromptTemplate(
-                template=prompt_template,input_variables=["context"])
-                chain = LLMChain(llm=llm, prompt=PROMPT)
-                answer=chain.run(prompt)
+                messages=[SystemMessage(content="Accept the user’s skin condition as input and provide probable diagnoses and prescription for only that condition."),
+                          HumanMessage(content=prompt)]
+                chat_response = llm.invoke(messages)
+                answer=chat_response.content
                 st.session_state.messages.append({"role": "assistant", "content": answer})
 
     elif option == "Open Camera":
@@ -335,13 +331,10 @@ with st.sidebar:
                 result= index.query(vector=rv.tolist(), top_k=1, include_metadata=True)
                 prompt=result['matches'][0]['metadata']['Disease']
                 st.write(prompt)
-                prompt_template='''Accept the user’s skin condition as input and provide probable diagnoses and prescription for only that condition.    
-                Text:
-                {context}'''
-                PROMPT = PromptTemplate(
-                template=prompt_template,input_variables=["context"])
-                chain = LLMChain(llm=llm, prompt=PROMPT)
-                answer=chain.run(prompt)
+                messages=[SystemMessage(content="Accept the user’s skin condition as input and provide probable diagnoses and prescription for only that condition."),
+                          HumanMessage(content=prompt)]
+                chat_response = llm.invoke(messages)
+                answer=chat_response.content
                 st.session_state.messages.append({"role": "assistant", "content": answer})
 
 
@@ -397,6 +390,7 @@ if uploaded:
         st.chat_message("assistant").write(answer)
 if st.button('clear'):
     h.update_one({"id": 'krrish'},{"$set": {"text": ""}})
+
 
 
 
