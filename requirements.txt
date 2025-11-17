@@ -13,8 +13,4 @@ torch
 clip
 SpeechRecognition
 pip==25.0
-
-
-
-
-
+pinecone
