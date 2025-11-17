@@ -352,8 +352,8 @@ if not flag:
         if re.search(r'\bYes\b', answer):
             messages=[SystemMessage(content="Accept the user’s skin condition as input and provide probable diagnoses and prescription for only that condition."),
                           HumanMessage(content=prompt)]
-                chat_response = llm.invoke(messages)
-                answer=chat_response.content
+            chat_response = llm.invoke(messages)
+            answer=chat_response.content
             prompt_template='''Accept the user’s symptoms as input and provide probable diseases, diagnoses and prescription using only the information stored in the vector database. politely inform the user that the data is insufficient to provide a diagnosis when the given prompt is not relavent to Medical Symptoms.    
             Text:
             {context}'''
@@ -390,6 +390,7 @@ if uploaded:
         st.chat_message("assistant").write(answer)
 if st.button('clear'):
     h.update_one({"id": 'krrish'},{"$set": {"text": ""}})
+
 
 
 
