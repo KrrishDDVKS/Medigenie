@@ -7,9 +7,7 @@ import base64
 import os
 import re
 from dotenv import load_dotenv,dotenv_values
-from langchain_community.vectorstores import Pinecone as PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
-from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 import io
@@ -248,7 +246,6 @@ llm=ChatOpenAI(api_key=os.environ['OPENAI_API_KEY'],
                    model_name='gpt-4o',
                    temperature=0.0)
 
-vectorstore = PineconeVectorStore(index_name=index_name, embedding=embed)
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "Hello! MediDet AI is here to help you diagnose symptoms. How can I assist you today?"
@@ -353,6 +350,10 @@ if not flag:
         chain = LLMChain(llm=llm, prompt=PROMPT)
         answer=chain.run(prompt)
         if re.search(r'\bYes\b', answer):
+            messages=[SystemMessage(content="Accept the user’s skin condition as input and provide probable diagnoses and prescription for only that condition."),
+                          HumanMessage(content=prompt)]
+                chat_response = llm.invoke(messages)
+                answer=chat_response.content
             prompt_template='''Accept the user’s symptoms as input and provide probable diseases, diagnoses and prescription using only the information stored in the vector database. politely inform the user that the data is insufficient to provide a diagnosis when the given prompt is not relavent to Medical Symptoms.    
             Text:
             {context}'''
@@ -389,6 +390,7 @@ if uploaded:
         st.chat_message("assistant").write(answer)
 if st.button('clear'):
     h.update_one({"id": 'krrish'},{"$set": {"text": ""}})
+
 
 
 
