@@ -12,7 +12,6 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
-from langchain.prompts import PromptTemplate
 import io
 import speech_recognition as sr
 import torch
@@ -390,6 +389,7 @@ if uploaded:
         st.chat_message("assistant").write(answer)
 if st.button('clear'):
     h.update_one({"id": 'krrish'},{"$set": {"text": ""}})
+
 
 
 
