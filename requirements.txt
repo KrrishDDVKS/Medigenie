@@ -7,10 +7,11 @@ langchain
 langchain-community
 pandas
 pydub
-git+https://github.com/openai/CLIP.git
+open-clip-torch
 git+https://github.com/openai/whisper.git
 torch
 clip
 SpeechRecognition
 pinecone
+
 
